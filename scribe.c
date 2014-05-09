@@ -9,7 +9,7 @@ struct scribe_client {
     PyObject * log;
 };
 
-int test() {
+struct scribe_client * my_open() {
 
     PyObject *scribe_name, * transport_name, *socket_name, *protocol_name;
     PyObject *scribe_module, * transport_module, *socket_module, *protocol_module;
@@ -136,13 +136,59 @@ int test() {
     
     printf("flag\n");
     //create log entry
+/*    
     PyObject * category, *message;
+    category = PyString_FromString("LOGS");
+    message = PyString_FromString("Hello from C");
+*/
+   //create log entry 
+    myclient->log_entry = PyObject_GetAttrString(scribe_module, "LogEntry");
+    if (myclient->log_entry && PyCallable_Check(myclient->log_entry)) {
+/*        pArgs = PyTuple_New(2);
+
+        //set category
+        PyTuple_SetItem(pArgs, 0, category);
+
+        //set message
+        PyTuple_SetItem(pArgs, 1, message);
+
+        pValue = PyObject_CallObject(myclient->log_entry, pArgs);
+        if (!pValue)
+            printf("error no log value");
+*/
+    } else 
+        printf("error no log entry function\n");
+/*
+    PyObject* messages = PyList_New(1);
+    PyList_SetItem(messages, 0, pValue);
+*/    
+    //get the log  function
+    myclient->log = PyObject_GetAttrString(myclient->client, "Log");
+    if (myclient->log && PyCallable_Check(myclient->log)) {
+  /*      pArgs = PyTuple_New(1);
+
+        //set message
+        PyTuple_SetItem(pArgs, 0, messages);
+
+        pValue = PyObject_CallObject(myclient->log, pArgs);
+        if (!pValue)
+            printf("error no result value");
+*/    
+   } else 
+        printf("error no log entry function\n");
+    
+    return myclient;
+}
+
+void send(struct scribe_client * myclient) {
+
+    //create log entry
+    
+    PyObject * category, *message, *pArgs, *pValue;
     category = PyString_FromString("LOGS");
     message = PyString_FromString("Hello from C");
 
    //create log entry 
-    myclient->log_entry = PyObject_GetAttrString(scribe_module, "LogEntry");
-    if (myclient->log_entry && PyCallable_Check(myclient->log_entry)) {
         pArgs = PyTuple_New(2);
 
         //set category
@@ -154,15 +200,12 @@ int test() {
         pValue = PyObject_CallObject(myclient->log_entry, pArgs);
         if (!pValue)
             printf("error no log value");
-    } else 
-        printf("error no log entry function\n");
+
 
     PyObject* messages = PyList_New(1);
     PyList_SetItem(messages, 0, pValue);
     
     //get the log  function
-    myclient->log = PyObject_GetAttrString(myclient->client, "Log");
-    if (myclient->log && PyCallable_Check(myclient->log)) {
         pArgs = PyTuple_New(1);
 
         //set message
@@ -171,10 +214,9 @@ int test() {
         pValue = PyObject_CallObject(myclient->log, pArgs);
         if (!pValue)
             printf("error no result value");
-    } else 
-        printf("error no log entry function\n");
+    
 }
-
-int main() {
-    test();
+int main() { 
+    struct scribe_client * myclient = my_open();
+    send(myclient);
 }
