@@ -6,6 +6,7 @@
 #include <transport/TTransportUtils.h>
 
 #include "gen-cpp/scribe.h"
+#include "scribe_wrapper.h"
 
 using namespace std;
 using std::string;
@@ -17,29 +18,28 @@ using namespace scribe::thrift;
 using namespace scribe;
 
 struct scribe_client {
-    shared_ptr<TTransport> socket; 
-    shared_ptr<TTransport> transport;
-    shared_ptr<TProtocol>  protocol;
+    TTransport* transport;
     scribeClient * client;
 };    
     
 struct scribe_client* open_connection(const char *host, const int port) {
-    struct scribe_client * c = malloc(sizeof(struct scribe_client));
+    struct scribe_client * c = (struct scribe_client *) 
+                                    malloc(sizeof(struct scribe_client));
 
-	c->socket(new TSocket(p->host, p->port));
-	c->transport(new TFramedTransport(socket));
-	c->protocol(new TBinaryProtocol(transport));
-	
-	c->client = new scribeClient(protocol);
+    shared_ptr<TTransport> socket(new TSocket(host, port));
+    shared_ptr<TTransport> transport(new TFramedTransport(socket));
+    shared_ptr<TProtocol>  protocol(new TBinaryProtocol(transport));
+    c->client = new scribeClient(protocol);
 	
 	try {
 		transport->open();
+        c->transport = transport.get();
 	} 
 	catch (TException &tx) {
-		return 1;
+		return NULL;
 	}
 		
-	return 0;
+	return c;
 }
 
 int scribe_log(scribe_client * c, const char *category, const char *buf){
@@ -55,7 +55,7 @@ int scribe_log(scribe_client * c, const char *category, const char *buf){
 }
 
 int close_connection(scribe_client *c) {
-	c->transport.close();
-	delete c->scribeClient;
+	c->transport->close();
+	delete c->client;
 	return 0;
 }

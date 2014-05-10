@@ -7,9 +7,9 @@ extern "C" {
 
 struct scribe_client;
 
-scribe_client * open_connection(const char *host, const int port);
-int scribe_log(scribe_client * c, const char *category, const char *buf);
-int close_connection(scribe_client *c);
+struct scribe_client * open_connection(const char *host, const int port);
+int scribe_log(struct scribe_client * c, const char *category, const char *buf);
+int close_connection(struct scribe_client *c);
 
 #ifdef __cplusplus
 }
