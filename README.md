@@ -14,6 +14,7 @@ C++ wrapper
 In order to build the C++ wrapper you will need the following
 
 [thrift] Thrift framework
+
 [fb303] Facebook Bassline (included in thrift/contrib/fb303/)
    fb303 r697294 or later is required.
 
