@@ -18,7 +18,7 @@ In order to build the C++ wrapper you will need the following
 [fb303] Facebook Bassline (included in thrift/contrib/fb303/)
    fb303 r697294 or later is required.
 
-After having a working version of thrift install do:
+After having a working version of thrift installed do:
 
 make
 
