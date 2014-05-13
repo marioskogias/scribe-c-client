@@ -28,6 +28,12 @@ all: clean $(DLIB)
 $(DLIB): $(CPP_OBJFILES) 
 	$(CC) $(SHARED_LDFLAGS) -o lib/$(DLIB) $^ $(INCLUDES) $(LDFLAGS)
 
+install: lib/$(DLIB)
+	install lib/$(DLIB) /usr/local/lib
+	mkdir /usr/local/include/scribe_client
+	install lib/scribe_wrapper.h /usr/local/include/scribe_client/client.h
+	ldconfig
+
 clean: force
 	$(shell find . -name '*.o' -exec rm -f {} \;)
 	rm -f lib/$(DLIB) 

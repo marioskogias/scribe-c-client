@@ -9,6 +9,9 @@ build:
 	make -f $(CURRENT_DIR)/build.mk
 	make -C $(CURRENT_DIR)/test
 
+install:
+	make -f $(CURRENT_DIR)/build.mk install
+
 clean:
 	make -f $(CURRENT_DIR)/gen.mk clean
 	make -f $(CURRENT_DIR)/build.mk clean
