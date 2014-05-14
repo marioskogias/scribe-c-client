@@ -12,8 +12,5 @@ all: test
 test:
 	$(CC) test.c $(CFLAGS)  $(LDFLAGS) $(INCLUDES) -o test
 
-run:	
-	LD_LIBRARY_PATH=$(LIB_DIR) ./test
-
 clean: 
 	rm -f *.o test
